@@ -491,22 +491,6 @@ data.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -578,7 +562,7 @@ plt.show()
 
 
     
-![png](output_49_0.png)
+![png](Visuals/output_49_0.png)
     
 
 
@@ -593,7 +577,7 @@ plt.show()
 
 
     
-![png](output_50_0.png)
+![png](Visuals/output_50_0.png)
     
 
 
@@ -609,7 +593,7 @@ plt.show()
 
 
     
-![png](output_51_0.png)
+![png](Visuals/output_51_0.png)
     
 
 
@@ -880,7 +864,7 @@ plt.show()
 
 
     
-![png](output_69_0.png)
+![png](Visuals/output_69_0.png)
     
 
 
@@ -896,7 +880,7 @@ plt.show()
 
 
     
-![png](output_70_0.png)
+![png](Visuals/output_70_0.png)
     
 
 
@@ -912,7 +896,7 @@ plt.show()
 
 
     
-![png](output_71_0.png)
+![png](Visuals/output_71_0.png)
     
 
 
