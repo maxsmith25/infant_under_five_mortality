@@ -32,16 +32,8 @@ population_url = "https://en.wikipedia.org/wiki/List_of_countries_and_dependenci
 
 ```python
 mortality_page = pd.read_html(mortality_rate_url)
-```
-
-
-```python
 mortality_data = mortality_page[2][["Country or territory", "2019mortality rate,under-5(per 1000live births)"]]
 mortality_data.columns = ["country", "under-5 mortality per 1000 births"]
-```
-
-
-```python
 mortality_data.head(2)
 ```
 
@@ -49,19 +41,6 @@ mortality_data.head(2)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -90,16 +69,8 @@ mortality_data.head(2)
 
 ```python
 GDP_per_capita_page = pd.read_html(GDP_per_capita_url)
-```
-
-
-```python
 GDP_per_capita_data = GDP_per_capita_page[3][["Country/Territory", "Int$"]]
 GDP_per_capita_data.columns = ["country", "gdp per cap"]
-```
-
-
-```python
 GDP_per_capita_data.head(2)
 ```
 
@@ -148,21 +119,9 @@ GDP_per_capita_data.head(2)
 
 ```python
 population_page = pd.read_html(population_url)
-```
-
-
-```python
 population_data = population_page[0][["Country(or dependent territory)", "Population"]]
 population_data.columns = ["country", "population"]
-```
-
-
-```python
 population_data["country"] = population_data.country.apply(lambda x: re.sub(r"\[\S+", "", x).strip()).apply(lambda y: re.sub(r"\(\S+", "", y))
-```
-
-
-```python
 population_data.head(2)
 ```
 
@@ -211,17 +170,9 @@ population_data.head(2)
 
 ```python
 life_expectancy_data = pd.read_csv("API_SP.DYN.LE00.IN_DS2_en_csv_v2_1740384.csv")
-```
-
-
-```python
 life_expectancy_data = life_expectancy_data[["Country Name", "2018"]]
 life_expectancy_data.columns = ["country", "life expectancy"]
 life_expectancy_data = life_expectancy_data.dropna()
-```
-
-
-```python
 life_expectancy_data.head(2)
 ```
 
@@ -271,6 +222,7 @@ One of the difficult parts was getting the country names to match across all fou
 
 
 ```python
+# Edit the Mortality Data
 mortality_data['country'][mortality_data['country'] == 'Congo, Democratic Republic of the'] = 'Dem. Congo'
 mortality_data['country'][mortality_data['country'] == 'Congo, Republic of the'] = 'Rep. Congo'
 mortality_data['country'][mortality_data['country'] == 'Korea, North'] = 'North Korea'
@@ -281,6 +233,7 @@ mortality_data['country'][mortality_data['country'] == 'Eswatini (Swaziland)'] =
 
 
 ```python
+# Edit the Life Expectancy Data
 life_expectancy_data['country'][life_expectancy_data['country'] == 'Brunei Darussalam'] = 'Brunei'
 life_expectancy_data['country'][life_expectancy_data['country'] == 'Cabo Verde'] = 'Cape Verde'
 life_expectancy_data['country'][life_expectancy_data['country'] == 'Congo, Dem. Rep.'] = 'Dem. Congo'
@@ -345,17 +298,11 @@ np.setdiff1d(list(mortality_data.country), list(GDP_per_capita_data.country))
 ```
 
 
-
+Here are the countries with statistics in the mortality data that are not in the GDP per capita data.
 
     array(['Andorra', 'Cuba', 'Eritrea', 'Monaco', 'North Korea', 'Somalia',
            'Syria'], dtype='<U32')
 
-
-
-
-```python
-# np.setdiff1d(list(GDP_per_capita_data.country), list(mortality_data.country))
-```
 
 
 ```python
@@ -371,7 +318,7 @@ population_data['country'][population_data['country'] == 'São Tomé and Prínci
 np.setdiff1d(list(mortality_data.country), list(population_data.country))
 ```
 
-
+Here are the countries with statistics in the mortality data that are not in the population data.
 
 
     array(["Cote d'Ivoire", 'Rep. Congo', 'Timor-Leste', 'West Bank'],
@@ -379,80 +326,54 @@ np.setdiff1d(list(mortality_data.country), list(population_data.country))
 
 
 
-
-```python
-# np.setdiff1d(list(population_data.country), list(mortality_data.country))
-```
-
 After I got the country names to match I was ready to compile all of the data into one data frame I did this by creating separate functions that pulled the metric I was looking for from the data frame where it was stored.
 
 
 ```python
 data = pd.DataFrame()
-```
 
-
-```python
 data['country'] = mortality_data['country']
 data['mortality'] = mortality_data['under-5 mortality per 1000 births']
 ```
 
 
 ```python
+# Fill the population column
+
 def FillPopulation(x):
     if (len(population_data['population'][population_data['country'] == x]) == 1):
         return population_data['population'][population_data['country'] == x]
     else :
         return float('NaN')
-```
-
-
-```python
 data["population"] = -1
-```
-
-
-```python
 for i in range(len(data)):
     data['population'][i] = FillPopulation(data['country'][i])
 ```
 
 
 ```python
+# Fill the life expectancy column
+
 def FillLifeExpectancy(x):
     if (len(life_expectancy_data['life expectancy'][life_expectancy_data['country'] == x]) == 1):
         return life_expectancy_data['life expectancy'][life_expectancy_data['country'] == x]
     else :
         return float('NaN')
-```
-
-
-```python
 data["life expectancy"] = -1
-```
-
-
-```python
 for i in range(len(data)):
     data['life expectancy'][i] = FillLifeExpectancy(data['country'][i])
 ```
 
 
 ```python
+# Fill the gdp per capita column
+
 def FillGdpPerCapita(x):
     if (len(GDP_per_capita_data['gdp per cap'][GDP_per_capita_data['country'] == x]) == 1):
         return GDP_per_capita_data['gdp per cap'][GDP_per_capita_data['country'] == x]
     else :
         return float('NaN')
-```
-
-
-```python
 data["gdp per cap"] = -1
-```
-
-
-```python
 for i in range(len(data)):
     data['gdp per cap'][i] = FillGdpPerCapita(data['country'][i])
 ```
@@ -483,10 +404,6 @@ data.info()
 
 ```python
 data = data.dropna()
-```
-
-
-```python
 data.head()
 ```
 
