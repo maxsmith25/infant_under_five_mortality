@@ -430,7 +430,7 @@ data.head()
 
 
 
-Below are three plots that compare mortality to the three features in my data set. After that is a table of the correlations. We see that the strongest correlation is between Life Expectancy and mortality
+Below are three plots that compare mortality to the three features in my data set. After that is a table of the correlations. We see that the strongest correlation is between Life Expectancy and mortality. The other two are more difficult to see a relationship so the correlation coefficients help us learn more about the relationships.
 
 
 ```python
